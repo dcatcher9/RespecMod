@@ -645,7 +645,8 @@ namespace RespecModBarley
                 {
                     targetUnit.TurnOff();
                 }
-                RestController.RemoveNegativeEffects(targetUnit);
+                //RestController.RemoveNegativeEffects(targetUnit);
+                targetUnit.Descriptor.RemoveNegativeEffects();
                 targetUnit.Descriptor.ResurrectAndFullRestore();
                 IGrouping<BlueprintBuff, TimeSpan?>[] array = (from i in targetUnit.Buffs.Enumerable.Where(delegate (Buff i)
                 {

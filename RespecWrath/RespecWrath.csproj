@@ -1,13 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="packages\Aze.Publicise.MSBuild.Task.1.0.0\build\Aze.Publicise.MSBuild.Task.props" Condition="Exists('packages\Aze.Publicise.MSBuild.Task.1.0.0\build\Aze.Publicise.MSBuild.Task.props')" />
-  <PropertyGroup>
-    <InstallDir Condition=" '$(InstallDir)' == '' ">F:\Games\Steam\steamapps\common\Pathfinder Second Adventure</InstallDir>
-  </PropertyGroup>
-  <Target Name="Publicise" AfterTargets="Clean">
-    <ItemGroup>
-      <PubliciseInputAssemblies Include="$(InstallDir)\Wrath_Data\Managed\Assembly-CSharp.dll" />
-    </ItemGroup>
+  <Target Name="RemoveLib" BeforeTargets="Clean" Condition="Exists('$(SolutionDir)lib')">
+    <RemoveDir Directories="$(SolutionDir)lib" />
+  </Target>
+  <Target Name="CreateLib" BeforeTargets="BeforeBuild" AfterTargets="RemoveLib" Condition="!Exists('$(SolutionDir)lib')">
+    <MakeDir Directories="$(SolutionDir)lib" />
+  </Target>
+  <ItemGroup>
+    <PubliciseInputAssemblies Include="$(WrathPath)\Wrath_Data\Managed\Assembly-CSharp.dll" />
+    <PubliciseInputAssemblies Include="$(WrathPath)\Wrath_Data\Managed\UniRx.dll" />
+    <PubliciseInputAssemblies Include="$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.UI.dll" />
+    <PubliciseInputAssemblies Include="$(WrathPath)\Wrath_Data\Managed\UnityModManager\UnityModManager.dll" />
+  </ItemGroup>
+  <Target Name="Publicise" AfterTargets="CreateLib">
     <Publicise InputAssemblies="@(PubliciseInputAssemblies)" OutputPath="$(SolutionDir)lib/" PubliciseCompilerGenerated="true" />
   </Target>
   <PropertyGroup>
@@ -42,9 +48,6 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup>
-    <InstallDir Condition=" '$(InstallDir)' == '' ">..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo</InstallDir>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseUMM|AnyCPU'">
     <OutputPath>bin\ReleaseUMM\</OutputPath>
     <DefineConstants>TRACE;UMM</DefineConstants>
@@ -65,39 +68,35 @@
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-  <Target Name="Publicise" AfterTargets="Clean">
-    <ItemGroup>
-      <PubliciseInputAssemblies Include="$(InstallDir)\Wrath_Data\Managed\Assembly-CSharp.dll" />
-    </ItemGroup>
-    <Publicise InputAssemblies="@(PubliciseInputAssemblies)" OutputPath="$(SolutionDir)lib/" PubliciseCompilerGenerated="true" />
-  </Target>
   <ItemGroup>
-    <Reference Include="0Harmony, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\0Harmony.dll</HintPath>
+    <Reference Include="0Harmony">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\0Harmony.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp_public">
-      <HintPath>lib\Assembly-CSharp_public.dll</HintPath>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(SolutionDir)lib\Assembly-CSharp_public.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="Aze.Publicise.MSBuild.Task, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>true</SpecificVersion>
-      <HintPath>packages\Aze.Publicise.MSBuild.Task.1.0.0\tasks\net46\Aze.Publicise.MSBuild.Task.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Aze.Publicise.MSBuild.Task" Version="1.0.0" />
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\Newtonsoft.Json.dll</HintPath>
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Owlcat.Runtime.Core">
-      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\Owlcat.Runtime.Core.dll</HintPath>
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.Core.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Owlcat.Runtime.UI">
-      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\Owlcat.Runtime.UI.dll</HintPath>
+      <HintPath>$(SolutionDir)\lib\Owlcat.Runtime.UI_public.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Owlcat.Runtime.Validation">
-      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\Owlcat.Runtime.Validation.dll</HintPath>
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.Validation.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -107,23 +106,25 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Core" />
     <Reference Include="UniRx">
-      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\UniRx.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\UniRx_public.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ImageConversionModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityModManager">
-      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure Debug\Wrath_Data\Managed\UnityModManager\UnityModManager.dll</HintPath>
+    <Reference Include="UnityModManager_public">
+      <HintPath>$(SolutionDir)\lib\UnityModManager_public.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
