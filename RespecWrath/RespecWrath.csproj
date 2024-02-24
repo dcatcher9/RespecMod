@@ -40,8 +40,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <DebugType>portable</DebugType>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -52,7 +52,7 @@
     <OutputPath>bin\ReleaseUMM\</OutputPath>
     <DefineConstants>TRACE;UMM</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>7.3</LangVersion>
@@ -62,7 +62,7 @@
     <OutputPath>bin\ReleaseWrathMod\</OutputPath>
     <DefineConstants>TRACE;WrathMod</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>7.3</LangVersion>
@@ -76,6 +76,10 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>$(SolutionDir)lib\Assembly-CSharp_public.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="Aze.Publicise.MSBuild.Task, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>true</SpecificVersion>
+      <HintPath>packages\Aze.Publicise.MSBuild.Task.1.0.0\tasks\net46\Aze.Publicise.MSBuild.Task.dll</HintPath>
     </Reference>
     <PackageReference Include="Aze.Publicise.MSBuild.Task" Version="1.0.0" />
     <Reference Include="Microsoft.Build.Framework" />
@@ -163,7 +167,6 @@
   <PropertyGroup>
     <PostBuildEvent>echo "$(TargetPath)" "&gt;$(WrathPath)\Mods\$(ProjectName)\$(ProjectName).dll*"
 xcopy /Y "$(TargetPath)" "$(WrathPath)\Mods\$(ProjectName)\$(ProjectName).dll*"
-xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(WrathPath)\Mods\$(ProjectName)\$(ProjectName).pdb*"
-</PostBuildEvent>
+xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(WrathPath)\Mods\$(ProjectName)\$(ProjectName).pdb*"</PostBuildEvent>
   </PropertyGroup>
 </Project>
